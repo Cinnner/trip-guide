@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CBB UK Guide">
+<meta name="theme-color" content="#0f1f38">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230f1f38'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E👑%3C/text%3E%3C/svg%3E">
+<title>CBB的UK奇妙之旅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy2: #1a2f4e;
+  --navy3: #243d61;
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --cream: #f5f0e8;
+  --cream2: #ede5d4;
+  --cream3: #faf7f2;
+  --text: #1a1a2e;
+  --muted: #6b6b7b;
+  --green: #2d6a4f;
+  --green-l: #e8f5ee;
+  --amber: #92400e;
+  --amber-l: #fef3c7;
+  --purple: #4c1d95;
+  --purple-l: #ede9fe;
+  --red: #991b1b;
+  --red-l: #fee2e2;
+  --blue: #1e40af;
+  --blue-l: #dbeafe;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(15,31,56,0.10);
+  --shadow-lg: 0 8px 40px rgba(15,31,56,0.16);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream3);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+/* iPhone safe areas */
+.app-header { padding-top: env(safe-area-inset-top); }
+.main { padding-bottom: max(80px, calc(60px + env(safe-area-inset-bottom))); }
+/* Touch targets min 44px */
+.day-btn { min-height: 52px; padding: 8px 13px; }
+.section-header { min-height: 52px; }
+.attraction-header { min-height: 48px; }
+.check-item { min-height: 44px; padding: 10px 0; }
+/* Smooth scroll */
+html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+/* Bottom safe area for day nav on iPhone */
+.day-nav { padding-bottom: 0; }
+
+/* ── Header ── */
+.app-header {
+  background: var(--navy);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+}
+.header-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-crown {
+  font-size: 22px;
+}
+.header-titles { flex: 1 }
+.header-title {
+  font-family: 'Playfair Display', serif;
+  color: var(--gold2);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1.2;
+}
+.header-sub {
+  color: rgba(255,255,255,.5);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.weather-pill {
+  background: rgba(255,255,255,.08);
+  border: 0.5px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  transition: background .2s;
+  white-space: nowrap;
+}
+.weather-pill:hover { background: rgba(255,255,255,.14); }
+
+/* ── Day Nav ── */
+.day-nav {
+  background: var(--navy2);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.day-nav::-webkit-scrollbar { display: none; }
+.day-nav-inner {
+  display: flex;
+  gap: 0;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.day-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,.45);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 10px 13px 9px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.day-btn .dnum { font-size: 16px; font-weight: 700; color: inherit; }
+.day-btn:hover { color: rgba(255,255,255,.75); }
+.day-btn.active { color: var(--gold2); border-bottom-color: var(--gold); }
+
+/* ── Main Layout ── */
+.main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px 12px 80px;
+}
+
+/* ── Day Hero ── */
+.day-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, var(--navy3) 100%);
+  border-radius: var(--radius);
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.day-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(201,168,76,.15);
+  border: 0.5px solid rgba(201,168,76,.4);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--gold2);
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.hero-subtitle {
+  color: rgba(255,255,255,.55);
+  font-size: 13px;
+  font-weight: 300;
+}
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+.hero-tag {
+  background: rgba(255,255,255,.08);
+  border: 0.5px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: rgba(255,255,255,.65);
+}
+
+/* ── Weather Card ── */
+.weather-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.05);
+}
+.weather-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.weather-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.weather-refresh {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 0.5px solid var(--cream2);
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.weather-refresh:hover { background: var(--cream); }
+.weather-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 18px;
+  align-items: center;
+}
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.weather-icon { font-size: 38px; line-height: 1; }
+.weather-temp {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.weather-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.weather-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.weather-detail-item {
+  background: var(--cream3);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+.weather-detail-item .wd-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.weather-detail-item .wd-val { font-weight: 500; color: var(--text); margin-top: 1px; }
+.weather-outfit {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  border-radius: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,.8);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.weather-outfit-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.weather-loading { text-align: center; color: var(--muted); padding: 20px; font-size: 13px; }
+.weather-err { text-align: center; color: var(--red); padding: 16px; font-size: 12px; }
+
+/* ── Section Cards ── */
+.section-card {
+  background: #fff;
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.04);
+  overflow: hidden;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px 13px;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: background .15s;
+  user-select: none;
+}
+.section-header:hover { background: var(--cream3); }
+.section-header.open { border-bottom-color: var(--cream2); }
+.section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.si-navy { background: var(--navy); }
+.si-gold { background: linear-gradient(135deg, #c9a84c, #e8c97a); }
+.si-green { background: #2d6a4f; }
+.si-amber { background: #d97706; }
+.si-purple { background: #6d28d9; }
+.si-red { background: #dc2626; }
+.section-label {
+  flex: 1;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--navy);
+}
+.section-chevron {
+  color: var(--muted);
+  font-size: 11px;
+  transition: transform .2s;
+}
+.section-chevron.open { transform: rotate(90deg); }
+.section-body { display: none; padding: 16px 18px 18px; }
+.section-body.open { display: block; }
+
+/* ── Timeline items ── */
+.timeline { list-style: none; }
+.tl-item {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 14px;
+  position: relative;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item:not(:last-child) .tl-line::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 16px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--cream2);
+}
+.tl-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 5px;
+  position: relative;
+  z-index: 1;
+}
+.tl-dot.alt { background: #7c3aed; }
+.tl-dot.warn { background: #d97706; }
+.tl-dot.note { background: var(--muted); }
+.tl-content { flex: 1; }
+.tl-text {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.tl-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── Attraction cards ── */
+.attraction {
+  border: 1px solid var(--cream2);
+  border-radius: 11px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.attraction:last-child { margin-bottom: 0; }
+.attraction-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  background: var(--cream3);
+  transition: background .15s;
+}
+.attraction-header:hover { background: var(--cream2); }
+.attr-emoji { font-size: 20px; }
+.attr-name {
+  flex: 1;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--navy);
+}
+.attr-chv { font-size: 10px; color: var(--muted); transition: transform .2s; }
+.attr-chv.open { transform: rotate(90deg); }
+.attraction-body { display: none; padding: 14px; border-top: 1px solid var(--cream2); }
+.attraction-body.open { display: block; }
+.attr-history {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.fun-facts { margin-top: 10px; }
+.fun-facts-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 7px;
+}
+.fun-fact {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.fun-fact::before {
+  content: '✦';
+  color: var(--gold);
+  flex-shrink: 0;
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+/* ── Checklist ── */
+.checklist { list-style: none; }
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--cream2);
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.check-item:last-child { border-bottom: none; }
+.check-item.done { opacity: .5; }
+.check-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--cream2);
+  background: #fff;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  transition: all .2s;
+}
+.check-item.done .check-box {
+  background: var(--green);
+  border-color: var(--green);
+}
+.check-label { font-size: 13.5px; line-height: 1.5; }
+.check-item.done .check-label { text-decoration: line-through; color: var(--muted); }
+.check-cat {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  padding-left: 30px;
+}
+
+/* ── Info boxes ── */
+.infobox {
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.65;
+  display: flex;
+  gap: 10px;
+}
+.infobox:last-child { margin-bottom: 0; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-content {}
+.infobox-title { font-weight: 500; margin-bottom: 3px; font-size: 13px; }
+.infobox-text { color: var(--muted); font-size: 12.5px; }
+.ib-amber { background: var(--amber-l); border-left: 3px solid #f59e0b; }
+.ib-amber .infobox-title { color: var(--amber); }
+.ib-green { background: var(--green-l); border-left: 3px solid #22c55e; }
+.ib-green .infobox-title { color: var(--green); }
+.ib-purple { background: var(--purple-l); border-left: 3px solid #8b5cf6; }
+.ib-purple .infobox-title { color: var(--purple); }
+.ib-red { background: var(--red-l); border-left: 3px solid #ef4444; }
+.ib-red .infobox-title { color: var(--red); }
+.ib-navy { background: #e8eef7; border-left: 3px solid var(--navy); }
+.ib-navy .infobox-title { color: var(--navy); }
+
+/* ── Ticket info ── */
+.ticket-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cream2);
+  font-size: 13px;
+}
+.ticket-row:last-child { border-bottom: none; }
+.ticket-name { font-weight: 500; color: var(--navy); min-width: 130px; }
+.ticket-info { color: var(--muted); flex: 1; font-size: 12.5px; line-height: 1.55; }
+.ticket-info a { color: var(--blue); text-decoration: none; }
+.ticket-info a:hover { text-decoration: underline; }
+
+/* ── Tips ── */
+.tip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 480px) { .tip-grid { grid-template-columns: 1fr; } }
+.tip-card {
+  background: var(--cream3);
+  border: 1px solid var(--cream2);
+  border-radius: 10px;
+  padding: 12px;
+}
+.tip-card-icon { font-size: 20px; margin-bottom: 6px; }
+.tip-card-title { font-size: 12px; font-weight: 500; color: var(--navy); margin-bottom: 5px; }
+.tip-card-text { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+/* ── Swap box ── */
+.swap-box {
+  background: linear-gradient(135deg, #1a1a3e, #2d1b69);
+  border-radius: 11px;
+  padding: 14px 16px;
+  color: rgba(255,255,255,.85);
+  margin-bottom: 12px;
+}
+.swap-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold2);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swap-text { font-size: 12.5px; line-height: 1.6; }
+
+/* ── Progress ── */
+.progress-bar-wrap {
+  background: rgba(255,255,255,.08);
+  border-radius: 4px;
+  height: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  border-radius: 4px;
+  transition: width .5s ease;
+}
+
+/* ── Fade in ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.main-content { animation: fadeIn .3s ease; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--cream2); border-radius: 4px; }
+
+.alt-label {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--purple-l);
+  color: var(--purple);
+  padding: 1px 7px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body>
+
+<div id="ios-hint" style="display:none;background:#0f1f38;color:rgba(255,255,255,.85);text-align:center;font-size:12px;padding:8px 16px;padding-top:max(8px,env(safe-area-inset-top));font-family:sans-serif;position:sticky;top:0;z-index:200;">
+  📲 在 Safari 中点击 <strong style="color:#e8c97a">分享</strong> → <strong style="color:#e8c97a">添加到主屏幕</strong>，即可像 App 一样使用
+  <button onclick="document.getElementById('ios-hint').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:16px;margin-left:8px;cursor:pointer;vertical-align:middle">✕</button>
+</div>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-crown">👑</div>
+    <div class="header-titles">
+      <div class="header-title">CBB的UK奇妙之旅</div>
+      <div class="header-sub">Apr 3 – 11, 2026 &nbsp;·&nbsp; Edinburgh · York · London</div>
+    </div>
+    <div class="weather-pill" id="headerWeather" onclick="scrollToWeather()">🌤 加载天气…</div>
+  </div>
+  <nav class="day-nav">
+    <div class="day-nav-inner" id="dayNav"></div>
+  </nav>
+</header>
+
+<main class="main" id="mainContent"></main>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────
+const DAYS = [
+{
+  id:1, label:"D1", short:"抵达", date:"4月3日 周五",
+  city:"抵达爱丁堡", emoji:"✈️",
+  tags:["苏格兰","全天免费","体力 ★☆☆☆☆","时差适应"],
+  weather:{lat:55.9533,lon:-3.1883,city:"Edinburgh"},
+  hero_sub:"从机场到 Royal Mile，第一眼就是中世纪石头城",
+  schedule:[
+    {text:"落地后乘 Airlink 100 巴士进城（£5，约30分钟），入住 Old Town / New Town 交界酒店",hl:true},
+    {text:"Royal Mile 漫步：从城堡广场走到 Holyrood Palace，感受老城氛围，无需进任何付费景点",hl:true},
+    {text:"傍晚 Calton Hill — 爱丁堡最佳免费观景点，可360°俯瞰全城 + 远眺城堡和 Arthur's Seat",hl:true},
+    {text:"建议入住后尽量撑到当地20:00以后再睡，帮助快速调整时差",warn:true}
+  ],
+  attractions:[
+    {
+      emoji:"🏰",name:"Royal Mile",
+      history:"皇家大道是爱丁堡旧城的脊梁，全长约1英里（约1.6公里），从山顶的爱丁堡城堡向下延伸至霍利鲁德宫。这条街道的历史超过1000年，是苏格兰王室进出城堡的御用通道。沿途密布着16–18世纪的石头建筑，许多保存完好，街道两侧遍布独立小店、威士忌专卖、餐厅和历史遗迹。",
+      facts:["街道实际上由多段不同名称的路段组成：Castlehill、Lawnmarket、High Street、Canongate 和 Abbey Strand。","每年8月爱丁堡艺术节期间，这条街会变成全球最大的街头表演场地，人潮摩肩接踵。","Harry Potter 的'对角巷'部分原型据说来自附近的 Victoria Street，但 Royal Mile 本身的中世纪气质深刻影响了 J.K. 罗琳的创作。"]
+    },
+    {
+      emoji:"⛰️",name:"Calton Hill",
+      history:"卡尔顿山海拔约100米，是爱丁堡新城边缘的一座玄武岩小丘，因其上众多新古典主义建筑而得名\"雅典风\"。山顶有未完工的苏格兰国家纪念碑（仿照雅典帕特农神殿，因资金告罄在1829年停工，当地人幽默地称之为\"苏格兰的耻辱\"），还有纳尔逊纪念塔和天文台遗址。",
+      facts:["国家纪念碑只建了12根柱子就永久停工，但这反而成了爱丁堡最具辨识度的地标之一。","每年4月30日，爱丁堡在此举办凯尔特传统节日 Beltane Fire Festival，古老仪式与篝火表演令人叹为观止。","卡尔顿山是爱丁堡城市规划的重要参照点，从这里可以同时看到城堡、海湾、Arthur's Seat 和新城全貌。"]
+    }
+  ],
+  checklist:[
+    {cat:"行前", items:["确认酒店入住时间","兑换或准备好英镑零钱/contactless卡","下载 Citymapper 或 Google Maps 离线地图"]},
+    {cat:"当天", items:["Airlink 100 刷卡上车","Royal Mile 打卡","Calton Hill 日落照片","找当地超市备好零食和饮用水"]}
+  ],
+  tips:[
+    {icon:"👗",title:"穿衣建议",text:"4月爱丁堡约8–13°C，多云且多风。建议洋葱穿法：薄毛衣+防风外套，备伞或轻薄雨衣。"},
+    {icon:"👟",title:"鞋子",text:"Royal Mile 和 Calton Hill 均为石板路或草地坡，强烈建议穿防滑运动鞋或登山鞋。"},
+    {icon:"⏰",title:"时差提示",text:"比北京时间晚7小时（夏令时），第一天尽量坚持到当地晚上，白天多晒阳光有助于调整。"},
+    {icon:"💳",title:"支付",text:"英国绝大多数商店支持 contactless，刷卡非常方便，但部分小摊和公共厕所需要硬币。"}
+  ]
+},
+{
+  id:2, label:"D2", short:"爱丁堡", date:"4月4日 周六",
+  city:"爱丁堡深度游", emoji:"🏰",
+  tags:["爱丁堡","城堡购票","博物馆免费","体力 ★★☆☆☆"],
+  weather:{lat:55.9533,lon:-3.1883,city:"Edinburgh"},
+  hero_sub:"从千年城堡到苏格兰国家博物馆，一天穿越整部苏格兰史",
+  schedule:[
+    {text:"09:30 — Edinburgh Castle 开门即入，早场人少，皇冠珠宝厅+大炮台（九磅炮）+苏格兰国家战争纪念碑",hl:true},
+    {text:"午餐后 — National Museum of Scotland，免费，展览从远古到现代，室内空调适合姐姐调整状态",hl:true},
+    {text:"傍晚 — Victoria Street 彩色拱廊小街，Grassmarket 广场，找一家苏格兰传统餐厅晚餐",hl:true}
+  ],
+  attractions:[
+    {
+      emoji:"🏰",name:"Edinburgh Castle 爱丁堡城堡",
+      history:"爱丁堡城堡坐落在死火山岩\"城堡岩\"顶端，距今约3000年前就有人类活动痕迹。城堡的现代主体建筑多建于12–16世纪，曾是苏格兰王室的核心宫殿和军事要塞。苏格兰王冠珠宝（Honours of Scotland）是现存最古老的王权象征之一，比英格兰的王冠珠宝更古老。1314年，罗伯特一世在苏格兰独立战争中夺回此城，是苏格兰历史上最重要的军事胜利之一。",
+      facts:["城堡岩是一块约3.5亿年前的火山岩石，四面陡峭，几乎无法攀登，是天然要塞。","每天13:00整，城堡会鸣响'一点炮'（One O'Clock Gun），这一传统始于1861年，最初是为了给港口的船只校准时间，至今仍坚持，周日除外。","苏格兰王冠珠宝在1707年英苏合并后被封存于城堡深处，直到1818年才被小说家沃尔特·斯科特爵士重新发现，一度被认为已永久失踪。","城堡历史上曾被围攻26次，是英国历史上被围攻次数最多的城堡。"]
+    },
+    {
+      emoji:"🏛️",name:"National Museum of Scotland",
+      history:"苏格兰国家博物馆位于 Chambers Street，由两部分组成：1866年维多利亚时代的老馆和1998年开放的现代新馆。馆藏超过1200万件藏品，从苏格兰的地质演化、皮克特人文明、维京入侵、独立战争，到工业革命和现代科技，是了解苏格兰全貌最高效的方式。完全免费，苏格兰政府拨款支持。",
+      facts:["博物馆最著名的展品之一是'多莉'（Dolly the Sheep）的标本——世界上第一只克隆哺乳动物，1996年在爱丁堡附近的罗斯林研究所诞生，死后被制成标本永久陈列。","博物馆建筑本身也是展品：维多利亚时代的老馆采用华丽的苏格兰男爵式风格，中庭高达36米，自然采光极美。","博物馆的'苏格兰独立展厅'详细呈现了1314年班诺克本战役，是了解苏格兰独立精神的必看展区。"]
+    },
+    {
+      emoji:"🌈",name:"Victoria Street 维多利亚街",
+      history:"维多利亚街建于19世纪30年代，是爱丁堡旧城改造计划的一部分，目的是在当时已经拥挤的旧城中开辟新的通道。这条弧形的双层街道以上层商店的彩色门面而闻名，红、绿、蓝、黄的店面密集排列，视觉效果极为强烈。J.K.罗琳在爱丁堡写作《哈利·波特》期间，曾多次在附近的咖啡馆（Elephant House）写作，维多利亚街的中世纪气质据说激发了对角巷的创作。",
+      facts:["维多利亚街底端连接着 Grassmarket 广场，那里在17–18世纪曾是爱丁堡的公开处决场地，超过100名被判死刑的人在此受刑，其中包括多名'科文圣徒'（迫害清教徒的受害者）。","街道的弧形设计在当时是工程上的壮举，上层步道可以俯瞰下层街道屋顶，形成了爱丁堡独特的立体街道景观。"]
+    }
+  ],
+  checklist:[
+    {cat:"购票", items:["提前在 edinburghcastle.scot 购买城堡票（避免现场排队）"]},
+    {cat:"城堡游览", items:["一点炮（13:00）观看","皇冠珠宝厅","苏格兰国家战争纪念碑","城堡顶端全景眺望"]},
+    {cat:"博物馆", items:["多莉羊标本","苏格兰独立展厅","维多利亚时代中庭仰拍"]},
+    {cat:"傍晚", items:["Victoria Street 彩色门面打卡","Grassmarket 广场散步","苏格兰传统餐厅：Haggis（羊杂碎）必尝"]}
+  ],
+  tickets:[
+    {name:"Edinburgh Castle",info:"官网：edinburghcastle.scot | 成人约£18 | 学生凭证享折扣，购票选 Student 票种，入场验证"},
+  ],
+  tips:[
+    {icon:"⏰",title:"最佳时间",text:"9:30开门即入，皇冠珠宝厅早场等候最短。下午人流量可达早上2–3倍。"},
+    {icon:"📱",title:"音频导览",text:"城堡有中文音频导览（需自带耳机），在入口处扫码下载，强烈建议使用，内容极为详细。"},
+    {icon:"🌬️",name:"城堡风大",text:"城堡岩顶端常有强风，即使晴天也要备好防风层，帽子容易被吹走。"},
+    {icon:"🍺",title:"晚餐推荐",text:"Grassmarket 有多家传统苏格兰餐厅，推荐尝试 Haggis（正统羊杂）和苏格兰威士忌。"}
+  ]
+},
+{
+  id:3, label:"D3", short:"周边游", date:"4月5日 周日",
+  city:"爱丁堡周边一日游", emoji:"🗺️",
+  tags:["苏格兰周边","Stirling Castle","天气决定方案","体力 ★★★☆☆"],
+  weather:{lat:55.9533,lon:-3.1883,city:"Edinburgh"},
+  hero_sub:"人文与自然双拼，三套方案前一晚看天气预报再定",
+  schedule:[
+    {text:"方案A（任何天气）：火车 Waverley → Stirling，约55分钟，全天城堡+Wallace Monument",hl:true},
+    {text:"方案B（晴天）：上午 Stirling Castle → 下午火车35分钟至 Balloch，沿罗蒙湖湖岸漫步",alt:true},
+    {text:"方案C（强晴备选）：St Andrews，海岸古城+Cathedral遗迹，需换乘约1.5–2小时",alt:true},
+    {text:"建议傍晚18:00前返回爱丁堡，为次日早起做准备",warn:true}
+  ],
+  swap:{title:"⚡ 天气决策逻辑",text:"前一晚查天气预报：阴雨多云 → 方案A（Stirling，室外历史景点，雨中也有感）；全天晴 → 方案B（Stirling+罗蒙湖，自然+人文双拼）；强晴且确定全天无雨 → 方案C（St Andrews，海岸景观依赖阳光）。方案B最能满足「让家人感受苏格兰自然与人文结合」的目标。"},
+  attractions:[
+    {
+      emoji:"⚔️",name:"Stirling Castle 斯特灵城堡",
+      history:"斯特灵城堡被称为苏格兰的钥匙——控制此处即控制苏格兰南北交通的咽喉。城堡建于火山岩顶端，历史可追溯至12世纪。14–16世纪是苏格兰最重要的王室宫殿，詹姆斯一世至詹姆斯六世先后在此居住和统治，苏格兰女王玛丽一世（Mary Queen of Scots）也曾在此接受加冕。1297年的斯特林桥战役（电影《勇敢的心》原型）中，威廉·华莱士在桥畔大败英格兰军队，城堡因此成为苏格兰独立精神的象征。",
+      facts:["城堡内的'大厅'（Great Hall）是苏格兰中世纪最大的宴会厅，近年经过精心修复，恢复了原本的黄色石灰岩外墙颜色。","斯特灵城堡与爱丁堡城堡经历了苏格兰历史上几乎所有重要的战役和政治事件，两座城堡的历史形成完整的苏格兰中世纪叙事。","城堡俯瞰的 Forth 河谷平原，在晴天可以清晰地看到几英里外的 William Wallace 纪念塔，两个地标形成壮丽的历史对话。"]
+    },
+    {
+      emoji:"🏔️",name:"Loch Lomond 罗蒙湖（方案B）",
+      history:"罗蒙湖是苏格兰最大的淡水湖，也是英国面积最大的湖泊，南北全长约36公里。湖区位于苏格兰低地与高地的交界，这一地理特征赋予了它独特的景观：南端湖岸宽阔平缓，有沙滩和草地；北端则被苏格兰高地山脊夹峙，雄浑峻峭。2002年与附近的 Trossachs 地区共同成为苏格兰第一个国家公园（Loch Lomond and the Trossachs National Park）。",
+      facts:["苏格兰传统民歌《罗蒙湖》（The Bonnie Banks o' Loch Lomond）据说是一名雅各比叛军士兵在被处决前夕所写，他将提前经由'冥界之路'（低路）先于幸存战友回到故乡。","湖中有30余个岛屿，其中最大的 Inchmurrin 岛上至今仍有人居住。","罗蒙湖距格拉斯哥市中心不足30公里，是欧洲城市居民最容易抵达的国家公园之一。"]
+    },
+    {
+      emoji:"🌊",name:"St Andrews 圣安德鲁斯（方案C）",
+      history:"圣安德鲁斯因三件事驰名于世：苏格兰守护神圣安德鲁的圣骨据说曾存放于此（使其成为中世纪欧洲最重要的朝圣地之一）；苏格兰最古老的大学（建于1413年，现为全球顶尖学府）；以及公认的高尔夫球运动发祥地——Old Course 至今已有600年历史，是全球高尔夫球迷心中的圣地。圣安德鲁斯大教堂曾是苏格兰最大的建筑，在16世纪宗教改革中被拆毁，遗址至今壮观。",
+      facts:["Old Course 的第18洞桥旁的 Swilcan Bridge 已有700年历史，是体育史上被拍照最多的地点之一。","威廉王子和凯特王妃正是在圣安德鲁斯大学相识，这里因此成为皇室朝圣地。","圣安德鲁斯大教堂在全盛时期（12–16世纪）比现存的爱丁堡大教堂大三倍，是苏格兰宗教权力的绝对中心。"]
+    }
+  ],
+  checklist:[
+    {cat:"Stirling", items:["城堡大厅（Great Hall）参观","Wallace Monument 外观打卡（可选入内）","Stirling 老城区漫步"]},
+    {cat:"方案B附加", items:["Balloch 湖岸步道","Loch Lomond Shores 购物区（可作午餐地点）","湖面远眺 Ben Lomond 山峰"]},
+    {cat:"方案C附加", items:["St Andrews Cathedral 遗迹","The Scores 海岸步道","Old Course 外围打卡（无需购票）","市中心 South Street 古建筑群"]}
+  ],
+  tickets:[
+    {name:"Stirling Castle",info:"官网：stirlingcastle.scot | 成人约£16 | 学生票可用，凭有效学生证验证"},
+  ],
+  tips:[
+    {icon:"🌦️",title:"天气决策",text:"建议在 BBC Weather 或 MetOffice 上查看 Stirling 和 St Andrews 分别的预报，不要只看爱丁堡数据。"},
+    {icon:"🚆",title:"交通提示",text:"Stirling 火车全天频繁，无需提前购票。方案C（St Andrews）建议提前买 Advance 票节省费用。"},
+    {icon:"🧥",title:"穿衣",text:"郊外比城市更冷更风大，方案B罗蒙湖湖边尤其多风，建议备好防风外套和帽子。"},
+    {icon:"📸",title:"拍照贴士",text:"Stirling 城堡俯瞰 Forth 河谷的全景照，最佳拍摄点在城堡后花园东侧护墙处。"}
+  ]
+},
+{
+  id:4, label:"D4", short:"→约克", date:"4月6日 周一",
+  city:"爱丁堡 → 约克", emoji:"🚂",
+  tags:["城际火车","约克","中世纪古城","体力 ★★☆☆☆"],
+  weather:{lat:53.9590,lon:-1.0815,city:"York"},
+  hero_sub:"两个半小时穿越英格兰，抵达千年古城约克",
+  schedule:[
+    {text:"09:00–10:00 火车：爱丁堡 Waverley → 约克，约2.5小时，Advance 票越早买越便宜",hl:true},
+    {text:"下午抵达 — York Minster 大教堂（外观免费，入内约£12），哥特式穹顶壮丽",hl:true},
+    {text:"City Walls 城墙漫步：完整一圈约4公里，可选段落，俯瞰老城屋顶全景",hl:true},
+    {text:"夜宿约克，傍晚在 Shambles 周边觅食"}
+  ],
+  attractions:[
+    {
+      emoji:"⛪",name:"York Minster 约克大教堂",
+      history:"约克大教堂（正式名称 Cathedral and Metropolitical Church of Saint Peter in York）是英格兰北部最大的中世纪教堂，也是欧洲规模最大的哥特式教堂之一。建造始于1220年，历时约250年才完工。教堂保存着全欧洲最大规模的中世纪彩色玻璃窗藏品，其中'五姐妹窗'（Five Sisters Window）是13世纪的杰作，高16米，由超过10万片玻璃拼成。约克自古是罗马帝国北英格兰行省的首府（当时称 Eboracum），罗马皇帝君士坦丁一世正是在此地被军队拥立为皇帝（306年）。",
+      facts:["大教堂地下可看到罗马时代的地基遗迹，时间跨度长达2000年的建筑层叠在一起，是欧洲最壮观的考古现场之一。","1984年一场雷击引发的大火烧毁了南翼廊顶部，修复工作耗时近10年，但损毁的彩色玻璃窗也因此得以更新部分现代元素。","教堂的建造使用了约200万块磁石，全部来自约克郡本地的 Magnesian Limestone，这种石材在阳光下呈现出温暖的金黄色调。"]
+    },
+    {
+      emoji:"🧱",name:"York City Walls 约克城墙",
+      history:"约克城墙是英国保存最完好的中世纪城墙，全长约3.4公里，可步行游览（完整一圈约1小时）。现存城墙主要建于13–14世纪，但其基础可追溯至罗马时代（当时的木制防御工事）和维京时代（789–954年，约克曾是维京王国 Jorvik 的首都）。城墙设有四座历史城门（Bar Gate）：Bootham Bar、Monk Bar、Walmgate Bar 和 Micklegate Bar，均为中世纪原物。",
+      facts:["在中世纪，被斩首的罪犯和叛乱者的头颅会被插在 Micklegate Bar 城门上示众，作为警示。","约克城墙是全英国唯一可以完整步行一圈的中世纪城墙，伦敦城墙已大部分拆除。","2012年，约克城墙的维护经费遭到削减，面临部分封闭的危险，市民自发组织保护运动，最终通过众筹和政府拨款保住了这段城墙。"]
+    }
+  ],
+  checklist:[
+    {cat:"火车", items:["提前购票（Trainline/National Rail）","确认 Advance 票班次不可改签","确认约克站到酒店距离"]},
+    {cat:"约克游览", items:["York Minster 外观 / 入内参观（可选）","Five Sisters Window 彩色玻璃窗","City Walls 城墙选段步行","Bootham Bar 城门合影"]},
+    {cat:"夜晚", items:["Shambles 街区预热","找一家传统英式 Pub 晚餐"]}
+  ],
+  tickets:[
+    {name:"爱丁堡→约克 火车",info:"trainline.com 或 nationalrail.co.uk | Advance 票需固定班次 | 16-25 Railcard 可享1/3折扣"},
+    {name:"York Minster 入内（可选）",info:"yorkminster.org | 成人约£12 | 学生票可用 | 外观免费，入内看彩色玻璃窗值得"},
+  ],
+  tips:[
+    {icon:"🎫",title:"火车购票",text:"越早购票越便宜，Advance 票比当天购票可省40–60%，但不可改签，请确认班次。"},
+    {icon:"🏃",title:"行程节奏",text:"火车程2.5小时，抵达约克通常是中午，下午游览时间充裕，不需要赶。"},
+    {icon:"🌂",title:"穿衣",text:"约克比爱丁堡略暖，但城墙步道上风大，外套不可少。预计4月约10–14°C。"},
+    {icon:"🍺",title:"约克Pub文化",text:"约克有全英国密度最高的历史 Pub，The Golden Fleece（建于1503年）据说是约克最古老且最闹鬼的 Pub，值得一试。"}
+  ]
+},
+{
+  id:5, label:"D5", short:"→伦敦", date:"4月7日 周二",
+  city:"约克 → 伦敦", emoji:"🏙️",
+  tags:["城际火车","The Shambles","抵达伦敦","体力 ★★☆☆☆"],
+  weather:{lat:51.5074,lon:-0.1278,city:"London"},
+  hero_sub:"告别中世纪约克，南下直奔大都会伦敦",
+  schedule:[
+    {text:"上午 — The Shambles：英格兰保存最完好的中世纪鹅卵石街道，早晨游客少，光线极佳",hl:true},
+    {text:"约克 Merchant Adventurers' Hall 外观（14世纪商人会所，英格兰最完整的中世纪行会建筑）",},
+    {text:"12:00–13:00 火车：约克 → 伦敦 King's Cross，约2小时",hl:true},
+    {text:"抵达伦敦 — 入住（Bloomsbury / Covent Garden 区推荐），附近随性漫步适应伦敦节奏"}
+  ],
+  attractions:[
+    {
+      emoji:"🏘️",name:"The Shambles",
+      history:"The Shambles 是约克一条保存完好的中世纪街道，名称来自古英语'Shamel'，意为'肉贩的摊位'——这里在中世纪是约克最主要的肉铺聚集地，街道曾常年弥漫着屠宰场的气味，以至于当时有句话说'如果你能忍受 Shambles 的气味，你就能适应约克的一切'。街道两侧建筑的上层向街道中央出挑，最窄处两侧建筑几乎相触，独特的空间感令人过目不忘。现在这里是精品店、咖啡馆和纪念品商店的聚集地。",
+      facts:["据信 The Shambles 的街道格局可追溯至1000年前，《末日审判书》（1086年）中就已记载了这条街。","J.K. 罗琳的粉丝将这里认定为'对角巷'的原型之一，每年吸引大量哈利·波特迷前来朝圣，尽管罗琳本人从未正式确认。","街道最窄处宽度不足2米，部分上层窗台之间的距离甚至不足1米，在这里可以握手相邻建筑对面的窗户。"]
+    }
+  ],
+  checklist:[
+    {cat:"约克早晨", items:["The Shambles 清晨拍照（人少）","约克老城最后一次漫步","退房打包"]},
+    {cat:"火车", items:["确认 King's Cross 抵达站台","提前查好酒店地铁路线"]},
+    {cat:"伦敦入住", items:["Oyster Card 或 contactless 刷卡地铁","附近超市采购","规划 D6 Westminster Abbey 门票是否已购"]}
+  ],
+  tickets:[
+    {name:"约克→伦敦 火车",info:"trainline.com | 约2小时 King's Cross | Advance 票提前购 | 16-25 Railcard享折扣"},
+  ],
+  tips:[
+    {icon:"🗺️",title:"伦敦交通",text:"入住后立即激活 Oyster Card 或确认 contactless 可用，伦敦地铁日封顶约£8.10（Zone 1-2）。"},
+    {icon:"📍",title:"住宿区域",text:"Bloomsbury 和 Covent Garden 紧邻大英博物馆、地铁方便、餐饮丰富，是伦敦游的理想基地。"},
+    {icon:"🌆",title:"第一眼伦敦",text:"抵达 King's Cross 后，不妨先在车站旁的'九又四分之三站台'合影，再出发入住。"},
+    {icon:"📋",title:"提前检查",text:"Westminster Abbey 票（westminster-abbey.org）和 Horizon 22 预约（horizon22.co.uk）是否已完成，今晚核对。"}
+  ]
+},
+{
+  id:6, label:"D6", short:"西敏区", date:"4月8日 周三",
+  city:"伦敦 · 西敏区 & 泰晤士河岸", emoji:"🎡",
+  tags:["Westminster Abbey","South Bank","Tate Modern可选","体力 ★★★☆☆"],
+  weather:{lat:51.5074,lon:-0.1278,city:"London"},
+  hero_sub:"全程步行：从王室加冕地到泰晤士河南岸文化带，伦敦最美徒步日",
+  schedule:[
+    {text:"09:00 — Westminster Abbey 首场入场，王室加冕地+牛顿/达尔文/丘吉尔长眠之所，约2小时",hl:true},
+    {text:"11:30 — 大本钟 + 威斯敏斯特宫外观 + Whitehall 大街徒步，唐宁街10号门口打卡，全程步行",hl:true},
+    {text:"13:00 — 午餐：Westminster 周边，或步行至 South Bank 觅食",},
+    {text:"14:00 — Westminster Bridge 过桥 → South Bank 南岸步道漫步，泰晤士河全景",hl:true},
+    {text:"15:30 — Tate Modern（免费）：Turbine Hall 常设装置 + 当代艺术精选，如时间紧可跳过",alt:true},
+    {text:"17:30 — 莎士比亚环球剧场外观 + Millennium Bridge 拍摄圣保罗大教堂对岸全景",hl:true}
+  ],
+  attractions:[
+    {
+      emoji:"⛪",name:"Westminster Abbey 威斯敏斯特大教堂",
+      history:"威斯敏斯特修道院是英国皇室和国家历史的核心舞台，自1066年威廉一世在此加冕以来，几乎所有英国君主都在此举行加冕仪式（共38位）。教堂内长眠着英国最重要的历史人物，包括牛顿、达尔文、乔叟、狄更斯和丘吉尔（衣冠冢）。2011年威廉王子与凯特王妃的婚礼、2022年伊丽莎白二世的葬礼均在此举行，使其成为全球收视率最高的历史建筑之一。",
+      facts:["教堂中有一块'无名战士之墓'（Tomb of the Unknown Warrior），安葬着一名身份不明的一战士兵，是全英国最常被献花的墓地。","威斯敏斯特大教堂技术上不是一座大教堂（Cathedral），而是一座'皇家特属教堂'（Royal Peculiar），直属君主管辖，不受任何主教管辖，独立性极强。","达尔文最初拒绝安葬于此，认为自己是'无神论者和怀疑论者'，教会方面最终以'国家级人物'说服其家属接受。"]
+    },
+    {
+      emoji:"🌉",name:"South Bank 泰晤士南岸",
+      history:"泰晤士河南岸（South Bank）从 Westminster Bridge 到 Tower Bridge 绵延约5公里，是伦敦最具活力的公共空间。19世纪以前这里是仓库和工业区，二战中遭到严重轰炸。1951年英国节（Festival of Britain）将这里改造为文化中心，Royal Festival Hall 正是这一时期的产物。今天的 South Bank 汇聚了 Tate Modern（泰特现代美术馆）、莎士比亚环球剧场、BFI（英国电影学院）和众多街头艺术，是伦敦市民最喜爱的公共空间。",
+      facts:["Tate Modern 占据的建筑原是一座废弃的发电站（Bankside Power Station），其巨大的烟囱成为伦敦天际线的一部分，改造本身就是世界建筑史上的经典案例。","莎士比亚环球剧场（Shakespeare's Globe）是1997年根据原版1599年圆形剧场重建的，只有部分顶棚，至今仍在自然光下（和雨中）演出莎剧。","South Bank 步道上有一块蓝色牌匾，标记着查理·卓别林的出生地——他出生于附近一条现已拆除的街道。"]
+    }
+  ],
+  checklist:[
+    {cat:"上午", items:["Westminster Abbey 参观（需提前购票）","大本钟+议会大厦外观拍照","唐宁街10号门口打卡"]},
+    {cat:"下午", items:["Westminster Bridge 全景照（桥中央俯瞰）","South Bank 步道漫步至 Tate Modern","莎士比亚环球剧场外观","Millennium Bridge 圣保罗大教堂对岸全景"]},
+    {cat:"如有余力", items:["Tate Modern Turbine Hall 免费常设装置（进去5分钟即可）"]}
+  ],
+  tickets:[
+    {name:"Westminster Abbey",info:"官网：westminster-abbey.org | 成人约£27 | 强烈建议现在就购票，旺季常售罄"},
+  ],
+  tips:[
+    {icon:"⚠️",title:"Abbey 必须提前购票",text:"Westminster Abbey 旺季经常提前售罄，建议现在就去官网购买，否则只能在外观看。"},
+    {icon:"🚶",title:"全程步行可达",text:"Westminster → Whitehall → South Bank → Tate Modern 全段步行约3公里，无需乘地铁，沿途风景极好。"},
+    {icon:"🌂",title:"穿衣",text:"4月伦敦约11–16°C，South Bank 泰晤士河边常有阵风，外套必备，推荐夹层穿法。"},
+    {icon:"📸",title:"最佳拍摄点",text:"Westminster Bridge 桥中央：左侧国会大厦+大本钟，右侧 South Bank 全景，是伦敦最经典的一张照片。"}
+  ]
+},
+{
+  id:7, label:"D7", short:"博物馆", date:"4月9日 周四",
+  city:"伦敦 · 大英博物馆", emoji:"🏛️",
+  tags:["大英博物馆完整一天","完全免费","室内全天","体力 ★★★☆☆"],
+  weather:{lat:51.5074,lon:-0.1278,city:"London"},
+  hero_sub:"八百万件藏品，完整一天沉浸人类文明史——罗塞塔石碑、木乃伊、帕特农神殿",
+  schedule:[
+    {text:"10:00 — 大英博物馆开门即入，全天充裕游览，完全免费",hl:true},
+    {text:"上午路线：罗塞塔石碑（Room 4）→ 埃及厅木乃伊（Room 62-63）→ 帕特农神殿厅（Room 18）→ 大中庭",hl:true},
+    {text:"13:00 — 馆内咖啡厅或附近 Museum Street 午餐，不需要离开区域",},
+    {text:"下午路线：刘易斯棋（Room 40）→ 中国馆（Room 33）→ 苏美尔文明厅（Room 56）→ 钟表展廊",hl:true},
+    {text:"17:30 — 附近 Covent Garden 步行5分钟，傍晚市集氛围 + 街头表演，晚餐选择丰富",hl:true},
+    {text:"⚡ 天气备用：若 D9 天气预报差，此日改为白崖，大英博物馆挪至 D9 晨游后去 Gatwick",warn:true}
+  ],
+  swap:{title:"⚡ 白崖对调备用方案",text:"提前两天关注 D9（4月11日）天气预报。若预报差，将此日改为白崖之旅；大英博物馆改至 D9 早上游览（上午10:00–12:30精华路线），随后直奔 Gatwick 离境。"},
+  attractions:[
+    {
+      emoji:"🏛️",name:"The British Museum 大英博物馆",
+      history:"大英博物馆于1753年建立，是世界上第一座对公众免费开放的国家博物馆。馆藏超过800万件藏品，涵盖人类文明自石器时代至今的几乎所有重要文化遗存。其核心藏品来源颇具争议：罗塞塔石碑、埃尔金大理石雕（帕特农神殿雕塑）等大量文物是在大英帝国鼎盛时期以各种方式获取的，希腊、埃及、中国等国至今仍在要求归还。这一张力使大英博物馆同时成为人类文明共同遗产的展示地和帝国历史的复杂镜像。",
+      facts:["罗塞塔石碑（Rosetta Stone）是人类文明解码史上最重要的文物，正是因为它，古埃及象形文字在被遗忘1400年后得以于1822年被重新破译。","大英博物馆大中庭（Great Court）的玻璃屋顶由3312块不重复的三角形玻璃拼成，是欧洲最大的室内广场，由 Norman Foster 设计，2000年开放。","馆内的'刘易斯棋'（Lewis Chessmen）是12世纪挪威工匠制作的象牙棋子，在苏格兰路易斯岛被发现，棋子人物的惊恐表情成为流行文化符号（《哈利·波特》活棋的灵感来源之一）。","若将大英博物馆所有展品铺开，足以覆盖约26个足球场的面积，即使每件藏品只看1秒，不吃不睡也需要超过90天。"]
+    },
+
+  ],
+  checklist:[
+    {cat:"上午路线", items:["罗塞塔石碑（Room 4）","埃及木乃伊厅（Room 62-63）","帕特农神殿厅 Elgin Marbles（Room 18）","大中庭玻璃顶仰拍"]},
+    {cat:"午餐后路线", items:["刘易斯棋（Room 40）","中国馆龙门石窟佛头（Room 33）","苏美尔乌尔墓葬（Room 56）","钟表与科学仪器展廊（Room 38）"]},
+    {cat:"傍晚", items:["Covent Garden 街头艺人","Neal's Yard 彩色庭院打卡","晚餐：Covent Garden 或 Soho"]}
+  ],
+  tips:[
+    {icon:"🗺️",title:"下载官方地图",text:"大英博物馆极大，强烈建议提前下载官方App或在入口领取纸质地图，没有地图极易迷路浪费时间。"},
+    {icon:"⏰",title:"开门即入策略",text:"10:00开门时人最少，关键展厅（埃及厅、罗塞塔石碑）下午人流量翻2-3倍，早到早占位。"},
+    {icon:"🎒",title:"寄存行李",text:"入口处有免费寄存服务，建议存放大件行李后轻装，一天走下来会省很多体力。"},
+    {icon:"🌙",title:"Covent Garden傍晚",text:"步行5分钟即到，傍晚有街头魔术师和音乐表演，Neal's Yard 彩色小院拍照极出片，推荐餐后散步。"}
+  ]
+},
+{
+  id:8, label:"D8", short:"塔区", date:"4月10日 周五",
+  city:"伦敦 · 自然史博物馆 + 塔桥区", emoji:"🗼",
+  tags:["自然史博物馆","伦敦塔外观","Tower Bridge","Borough Market","Horizon 22","体力 ★★★☆☆"],
+  weather:{lat:51.5074,lon:-0.1278,city:"London"},
+  hero_sub:"南肯辛顿博物馆 → Borough Market午餐 → 伦敦塔桥区 → Horizon 22，地铁一线串联全程",
+  schedule:[
+    {text:"09:30 — 自然史博物馆（South Kensington）：蓝鲸骨架'Hope' + 恐龙厅 + 地球厅，约2.5小时，完全免费",hl:true},
+    {text:"12:15 — 地铁出发：South Kensington → Monument（District/Circle线，约30分钟），步行至 Borough Market",hl:true},
+    {text:"13:00 — Borough Market 午餐（周五全面营业，为全周最佳状态）：Raclette、生蚝、英式 scotch egg",hl:true},
+    {text:"14:30 — 步行8分钟至 Tower Bridge：南岸桥头全景拍摄，可选桥面展览（约£12）",hl:true},
+    {text:"15:30 — 伦敦塔外观：护城河步道绕行，Traitors Gate + 渡鸦花园视角，St Katharine Docks",hl:true},
+    {text:"17:30 — Horizon 22（22 Bishopsgate，步行15分钟）：傍晚时段全城橙金色调，最佳拍摄时机",hl:true}
+  ],
+  attractions:[
+    {
+      emoji:"🦕",name:"Natural History Museum 自然史博物馆",
+      history:"自然史博物馆坐落于南肯辛顿，1881年由建筑师 Alfred Waterhouse 设计，仿罗马式的赤陶砖外墙上装饰着约200种动植物浮雕——左翼为现存物种，右翼为灭绝物种，这一设计细节极少有游客注意到。馆内藏有超过8000万件自然标本，是全球最重要的自然史研究机构之一。2017年，标志性的梁龙骨架被换成了蓝鲸骨架'Hope'（长25.2米），悬挂于入口中央大厅，进门即震撼。",
+      facts:["馆内珍藏达尔文在小猎犬号航行中采集的部分原始标本，包括加拉帕戈斯群岛的雀类——正是这些标本启发了进化论的形成。","馆内有一株1772年种植的巨型红杉树横截面，可数出超过1300个年轮，直观感受时间的尺度。","建筑外墙浮雕左右两翼分工精妙：左翼（自然史馆）是现存动植物，右翼（地质馆）是灭绝生物，是建筑叙事的经典案例。"]
+    },
+    {
+      emoji:"🏰",name:"Tower of London 伦敦塔（外观）",
+      history:"伦敦塔由诺曼征服者威廉一世于1078年开始建造，是英格兰最重要的中世纪军事建筑，护城河与双层城墙构成的外观本身就极为壮观。历史上先后充当皇宫、国库、军械库、监狱和处决场——安妮·博林、托马斯·莫尔和简·格雷女王均在此被处决。沿护城河步道绕行一圈，可以清晰看到各时代加建的塔楼、叛徒门（Traitors Gate，囚犯从泰晤士河被押解入塔的水门），以及渡鸦花园方向活动的渡鸦，完全不入内也能感受到历史的厚重感。",
+      facts:["伦敦塔的渡鸦（Ravens）受到皇家特别保护：根据传说，若伦敦塔的渡鸦离开，英格兰王国和塔楼将会崩塌。目前共有8只渡鸦在此常驻，翅膀被微微修剪以防飞走，并配备专职'渡鸦看守人'。","塔中一个鲜少人知的秘密是一座动物园遗址——13至19世纪，伦敦塔曾是皇家动物园，饲养过北极熊（波兰国王赠礼，曾在泰晤士河钓鱼）、大象和狮子。","'Tower of London'这个名字技术上仅指中间的白塔（White Tower），整个建筑群的正式名称是'Her Majesty's Royal Palace and Fortress of the Tower of London'。"]
+    },
+    {
+      emoji:"🌉",name:"Tower Bridge 塔桥",
+      history:"伦敦塔桥建于1886–1894年，是维多利亚时代工程技术的顶峰之作。独特的新哥特式双塔设计是为了与毗邻的伦敦塔在视觉上和谐统一。塔桥是一座开合桥（Bascule Bridge），两段可以同时向上抬起，允许大型船只通过，这一机械结构在100多年前被视为工程奇迹。至今每年仍开合约800次（每次通知需提前24小时申请）。",
+      facts:["世界上著名的一个地理误会：许多美国游客把'London Bridge'（一座普通的石桥）误认为是'Tower Bridge'（有双塔的那座）。1968年，London Bridge 被卖给了美国亚利桑那州的一个地产商，整体拆迁后在沙漠中重建——而买家据说直到桥运到美国才意识到他买错了。","塔桥桥面展览包含参观高空玻璃地板步道——透过脚下可以直视泰晤士河面，以及观看维多利亚时代原版蒸汽动力开合机械室。"]
+    },
+    {
+      emoji:"🏙️",name:"Horizon 22",
+      history:"Horizon 22 位于伦敦金融城最新的摩天楼 22 Bishopsgate（高278米，2019年建成），是伦敦目前最高的免费公众观景台，位于第58层，可270°俯瞰伦敦全景。与 Sky Garden 和 The Shard 的收费观景台不同，Horizon 22 坚持完全免费开放，被认为是近年伦敦对市民最友好的公共空间决策之一。落地玻璃墙面，天气任何情况下均可参观（全封闭）。",
+      facts:["从 Horizon 22 可以同时看到：塔桥、圣保罗大教堂圆顶、The Shard、伦敦眼、温布利大球场，以及在晴天甚至远至温莎城堡的轮廓。","22 Bishopsgate 的建造过程中，挖掘地基时发现了罗马时代的神庙遗迹和中世纪墓葬，全部经过考古记录后才继续施工。","每周一早10:00释放新的两周内名额，额满即止。Horizon 22 的火爆程度远低于 Sky Garden，通常预约难度较低但仍需提前抢票。"]
+    }
+  ],
+  checklist:[
+    {cat:"自然史博物馆（上午）", items:["入口大厅蓝鲸骨架'Hope'仰拍","恐龙厅（三角龙 + 禽龙化石）","地球厅（陨石展区）","建筑外墙动植物浮雕细节"]},
+    {cat:"Borough Market 午餐", items:["Raclette 芝士烤面包","Furness Fish Markets 生蚝（可选）","Neal's Yard Dairy 英式奶酪","英式 scotch egg"]},
+    {cat:"塔桥 & 伦敦塔外观", items:["Tower Bridge 南岸全景拍摄","桥面玻璃步道（可选，£12）","Traitors Gate 叛徒门外观","St Katharine Docks 游艇港"]},
+    {cat:"Horizon 22（傍晚）", items:["凭预约二维码准时到达","夕阳时段全城橙金全景","圣保罗圆顶 + 塔桥同框构图"]}
+  ],
+  tickets:[
+    {name:"Horizon 22",info:"官网：horizon22.co.uk | 完全免费 | 每周一10:00抢票 | 时间段制入场，务必准时到达"},
+    {name:"Tower Bridge 桥面（可选）",info:"towerbridge.org.uk | 约£12 | 含高空玻璃步道 + 维多利亚蒸汽机械室 | 外观免费"},
+    {name:"自然史博物馆",info:"nhm.ac.uk | 完全免费 | 无需预约 | 周五早上较周末人少，9:30开门即入最佳"},
+  ],
+  tips:[
+    {icon:"🚇",title:"地铁路线",text:"South Kensington → Monument（District/Circle线，约30分钟，一次换乘）。Borough Market 出 London Bridge 站步行3分钟，Tower Hill 再走8分钟至塔桥。"},
+    {icon:"🦕",title:"自然史博物馆贴士",text:"9:30开门，周五上午人少。蓝鲸骨架在入口中央大厅，进门即见。恐龙厅在右翼，地球厅在左翼。建议游览约2.5小时。"},
+    {icon:"🥘",title:"Borough Market",text:"周五是全周最佳状态（周四周六次之），摊位最齐、食材最新。建议12:45–13:30前往，早过人少；推荐：Kappacasein Raclette、Monmouth Coffee。"},
+    {icon:"🌃",title:"Horizon 22 傍晚时机",text:"预约17:30–18:30时段，夕阳西下时全城橙金，金融区玻璃幕墙反光效果极佳。从塔桥步行15分钟即到。"}
+  ]
+},
+{
+  id:9, label:"D9", short:"白崖→离境", date:"4月11日 周六",
+  city:"七姐妹白崖 → Gatwick 离境", emoji:"⛰️",
+  tags:["Seven Sisters","天气第一","离境日","体力 ★★★★☆"],
+  weather:{lat:50.7714,lon:0.2822,city:"Eastbourne"},
+  hero_sub:"英格兰最壮丽的海岸线，白垩悬崖与碧蓝海湾的终章",
+  schedule:[
+    {text:"主方案（天气好）：07:30–08:00 从伦敦 Victoria 出发，火车约1小时至 Brighton",hl:true},
+    {text:"Brighton 转乘 12X 巴士（£2 刷卡上车），Seven Sisters Country Park 下车",hl:true},
+    {text:"徒步：Cuckmere Valley → 白崖顶 → Birling Gap 观景点，下车后约30分钟步行",hl:true},
+    {text:"Eastbourne 集结 → 火车/巴士至 Gatwick，约1–1.5小时，预留3小时候机",hl:true},
+    {text:"备用方案（天气差）：大英博物馆晨游（若 D7 已换去白崖则今日补上）→ Gatwick",alt:true}
+  ],
+  swap:{title:"⚠️ 12X vs 13X 班次说明",text:"13X（直达 Birling Gap 观景台）仅周日及公共假期运行，4月11日周六运行的是 12X，在 Seven Sisters Country Park 下车后需步行约30分钟至 Birling Gap，路线平坦无坡，景色极佳。票价£2，直接刷contactless上车，无需提前购票。"},
+  attractions:[
+    {
+      emoji:"🏔️",name:"Seven Sisters 七姐妹白崖",
+      history:"七姐妹是英吉利海峡北岸最壮丽的自然景观之一，由七座连续起伏的白垩悬崖组成，每座悬崖都有自己的名字（Went Hill Brow、Baily's Hill、Flagstaff Point 等）。这片白垩地层形成于约8000万年前，是无数微小的海洋生物骨骼沉积压缩的结果。悬崖正在以每年约30–40厘米的速度被海浪侵蚀和坍塌，因此眼前的景观是动态变化的——每隔几年就会有一块崖体坠落入海。七姐妹崖没有开发任何商业设施，是英格兰南岸唯一几乎未被开发的白垩海岸线段。",
+      facts:["七姐妹的白垩崖技术上比多佛白崖（Cliffs of Dover）更纯粹、更原始，但因多佛地处交通要道，多佛白崖的知名度更高。","电影《赎罪》（Atonement, 2007）和《哈利·波特》系列中的多个海岸场景，实际上是在七姐妹取景的，而非多佛。","Birling Gap 是崖顶俯瞰的最佳点，这里还保存着历史上用于走私的悬崖阶梯遗迹——18世纪走私在英格兰南岸极为普遍。","7月–8月，崖顶草地会盛开野花，但4月已开始返青，配合深蓝海水，是全年视觉效果最清爽的季节。"]
+    }
+  ],
+  checklist:[
+    {cat:"出发前确认", items:["天气预报：Brighton/Eastbourne 晴天确认","航班时间 → 推算最晚何时离开 Eastbourne","12X 巴士班次确认（Brighton Bus Station）"]},
+    {cat:"徒步装备", items:["防风外套（崖顶极风大）","防滑运动鞋或登山鞋","备好水和能量食物","充满电的手机（拍照耗电快）","防晒霜（4月紫外线已强）"]},
+    {cat:"七姐妹", items:["Cuckmere Valley 河口全景","崖顶步行至 Birling Gap","远眺七座白崖全景照","崖下海湾（需下台阶，可选）"]},
+    {cat:"离境", items:["Eastbourne → Gatwick 火车/巴士","Gatwick 航班提前3小时到达","退还 Oyster Card 余额（如适用）"]}
+  ],
+  tips:[
+    {icon:"🌤️",title:"天气是一切",text:"七姐妹的美完全依赖天气。阴天的白崖是灰的，蓝天下才是纯白的。提前两天开始追踪 Eastbourne 天气。"},
+    {icon:"👟",title:"鞋子极重要",text:"崖顶草地在4月可能湿滑，普通旅游鞋可能打滑。防滑运动鞋或登山鞋必备，切勿穿皮鞋。"},
+    {icon:"💨",title:"崖顶风力",text:"七姐妹崖顶常年强风，4月尤烈，风力有时达6–7级。不建议过于靠近崖边，保持2米以上安全距离。"},
+    {icon:"⏱️",title:"时间控制",text:"从 Brighton 出发，全程约4–5小时（含交通），建议最晚15:00从 Eastbourne 出发去 Gatwick，以免赶时间影响体验。"}
+  ]
+}
+];
+
+// ── Weather fetch ─────────────────────────────────────────────────
+const WMO_CODES = {
+  0:"晴天",1:"基本晴",2:"部分多云",3:"阴天",
+  45:"雾",48:"雾凇",
+  51:"小毛毛雨",53:"毛毛雨",55:"浓毛毛雨",
+  61:"小雨",63:"中雨",65:"大雨",
+  71:"小雪",73:"中雪",75:"大雪",
+  80:"阵雨",81:"强阵雨",82:"暴阵雨",
+  95:"雷暴",96:"冰雹雷暴",99:"强冰雹雷暴"
+};
+const WMO_ICONS = {
+  0:"☀️",1:"🌤️",2:"⛅",3:"☁️",
+  45:"🌫️",48:"🌫️",
+  51:"🌦️",53:"🌦️",55:"🌧️",
+  61:"🌧️",63:"🌧️",65:"🌧️",
+  71:"🌨️",73:"🌨️",75:"❄️",
+  80:"🌦️",81:"🌧️",82:"⛈️",
+  95:"⛈️",96:"⛈️",99:"⛈️"
+};
+
+const weatherCache = {};
+
+async function fetchWeather(lat, lon, dateStr) {
+  const key = `${lat},${lon},${dateStr}`;
+  if (weatherCache[key]) return weatherCache[key];
+  try {
+    // Fetch 16-day forecast array and find the matching date by index
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode,windspeed_10m_max&timezone=Europe%2FLondon&forecast_days=16`;
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!d.daily || !d.daily.time) return null;
+    const idx = d.daily.time.indexOf(dateStr);
+    if (idx === -1) return null; // date not in forecast window
+    const result = {
+      max: Math.round(d.daily.temperature_2m_max[idx]),
+      min: Math.round(d.daily.temperature_2m_min[idx]),
+      rain: (d.daily.precipitation_sum[idx] || 0).toFixed(1),
+      code: d.daily.weathercode[idx],
+      wind: Math.round(d.daily.windspeed_10m_max[idx])
+    };
+    weatherCache[key] = result;
+    return result;
+  } catch(e) { return null; }
+}
+
+function getOutfitAdvice(code, max, min, wind) {
+  let clothes = [];
+  if (min < 8) clothes.push("厚外套必备");
+  else if (min < 12) clothes.push("防风外套");
+  else clothes.push("轻薄外套");
+  if ([61,63,65,80,81,82,51,53,55].includes(code)) clothes.push("带雨伞/雨衣");
+  if (wind > 30) clothes.push("防风帽");
+  if (max > 18) clothes.push("可备T恤换穿");
+  clothes.push("舒适步行鞋");
+  return clothes.join(" · ");
+}
+
+function getDayDate(dayId) {
+  // D1 = April 3 2026
+  const start = new Date('2026-04-03');
+  const d = new Date(start);
+  d.setDate(start.getDate() + dayId - 1);
+  return d.toISOString().split('T')[0];
+}
+
+// ── State ─────────────────────────────────────────────────────────
+let currentDay = 1;
+const checkState = JSON.parse(localStorage.getItem('cbb_checks') || '{}');
+
+function saveChecks() {
+  try { localStorage.setItem('cbb_checks', JSON.stringify(checkState)); } catch(e) {}
+}
+
+// ── Render ────────────────────────────────────────────────────────
+function renderNav() {
+  const nav = document.getElementById('dayNav');
+  nav.innerHTML = DAYS.map(d => `
+    <button class="day-btn${d.id===currentDay?' active':''}" onclick="switchDay(${d.id})">
+      <span class="dnum">${d.label}</span>
+      <span>${d.short}</span>
+    </button>
+  `).join('');
+}
+
+function toggleSection(id) {
+  const body = document.getElementById('sb-'+id);
+  const chv = document.getElementById('sc-'+id);
+  const hdr = document.getElementById('sh-'+id);
+  body.classList.toggle('open');
+  chv.classList.toggle('open');
+  hdr.classList.toggle('open');
+}
+
+function toggleAttr(id) {
+  const body = document.getElementById('ab-'+id);
+  const chv = document.getElementById('ac-'+id);
+  body.classList.toggle('open');
+  chv.classList.toggle('open');
+}
+
+function toggleCheck(key) {
+  checkState[key] = !checkState[key];
+  saveChecks();
+  const item = document.getElementById('ci-'+key);
+  if (!item) return;
+  item.classList.toggle('done', !!checkState[key]);
+  item.querySelector('.check-box').textContent = checkState[key] ? '✓' : '';
+}
+
+function renderWeatherCard(dayData, containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const dateStr = getDayDate(dayData.id);
+  const now = new Date();
+  const target = new Date(dateStr);
+  const diffDays = Math.round((target - now) / 86400000);
+
+  el.innerHTML = `<div class="weather-loading">🌐 正在获取实时天气…</div>`;
+  fetchWeather(dayData.weather.lat, dayData.weather.lon, dateStr).then(w => {
+    if (!w) {
+      // Fallback: show climate reference for April
+      const cityClimate = {
+        Edinburgh: {max:12, min:6, rain:'3.5', code:2, wind:25},
+        York:      {max:13, min:6, rain:'2.8', code:2, wind:20},
+        London:    {max:15, min:8, rain:'1.9', code:1, wind:18},
+        Eastbourne:{max:14, min:7, rain:'2.2', code:1, wind:22}
+      };
+      const ref = cityClimate[dayData.weather.city] || cityClimate.London;
+      const icon = WMO_ICONS[ref.code] || '⛅';
+      const outfit = getOutfitAdvice(ref.code, ref.max, ref.min, ref.wind);
+      el.innerHTML = `
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:5px 8px;background:var(--amber-l);border-radius:6px;border-left:3px solid #f59e0b">
+          📊 显示4月历史气候参考值（预报数据当前不可用）
+        </div>
+        <div class="weather-grid">
+          <div class="weather-main">
+            <div class="weather-icon">${icon}</div>
+            <div>
+              <div class="weather-temp">${ref.max}°<span style="font-size:18px;font-weight:300;color:var(--muted)">/${ref.min}°</span></div>
+              <div class="weather-desc">4月均值 · ${dayData.weather.city}</div>
+            </div>
+          </div>
+          <div class="weather-details">
+            <div class="weather-detail-item"><div class="wd-label">日均降雨</div><div class="wd-val">${ref.rain}mm</div></div>
+            <div class="weather-detail-item"><div class="wd-label">平均风速</div><div class="wd-val">${ref.wind} km/h</div></div>
+          </div>
+        </div>
+        <div class="weather-outfit"><div class="weather-outfit-icon">👗</div><div><strong style="color:rgba(255,255,255,.9)">穿衣建议：</strong>${outfit}</div></div>`;
+      return;
+    }
+    const icon = WMO_ICONS[w.code] || '🌡️';
+    const desc = WMO_CODES[w.code] || '天气未知';
+    const outfit = getOutfitAdvice(w.code, w.max, w.min, w.wind);
+    el.innerHTML = `
+      <div class="weather-grid">
+        <div class="weather-main">
+          <div class="weather-icon">${icon}</div>
+          <div>
+            <div class="weather-temp">${w.max}°<span style="font-size:18px;font-weight:300;color:var(--muted)">/${w.min}°</span></div>
+            <div class="weather-desc">${desc} · ${dayData.weather.city}</div>
+          </div>
+        </div>
+        <div class="weather-details">
+          <div class="weather-detail-item"><div class="wd-label">降雨</div><div class="wd-val">${w.rain}mm</div></div>
+          <div class="weather-detail-item"><div class="wd-label">最大风速</div><div class="wd-val">${w.wind} km/h</div></div>
+        </div>
+      </div>
+      <div class="weather-outfit">
+        <div class="weather-outfit-icon">👗</div>
+        <div><strong style="color:rgba(255,255,255,.9)">穿衣建议：</strong>${outfit}</div>
+      </div>
+    `;
+    // Update header pill if this is current day
+    if (dayData.id === currentDay) {
+      document.getElementById('headerWeather').textContent = `${icon} ${w.max}°/${w.min}° ${desc}`;
+    }
+  });
+}
+
+function renderDay(dayData) {
+  const d = dayData;
+  let html = `<div class="main-content">`;
+
+  // Hero
+  html += `<div class="day-hero">
+    <div class="hero-badge">${d.emoji} ${d.date}</div>
+    <div class="hero-title">${d.city}</div>
+    <div class="hero-subtitle">${d.hero_sub}</div>
+    <div class="hero-tags">${d.tags.map(t=>`<span class="hero-tag">${t}</span>`).join('')}</div>
+  </div>`;
+
+  // Weather
+  html += `<div class="section-card">
+    <div class="section-header" id="sh-w${d.id}" onclick="toggleSection('w${d.id}')">
+      <div class="section-icon si-navy">🌤️</div>
+      <div class="section-label">当日天气预报</div>
+      <div class="section-chevron open" id="sc-w${d.id}">▶</div>
+    </div>
+    <div class="section-body open" id="sb-w${d.id}">
+      <div class="weather-card-header">
+        <div class="weather-card-title">📍 ${d.weather.city} · ${d.date}</div>
+        <button class="weather-refresh" onclick="renderWeatherCard(DAYS[${d.id-1}],'wc-${d.id}')">↻ 刷新</button>
+      </div>
+      <div id="wc-${d.id}"><div class="weather-loading">加载中…</div></div>
+    </div>
+  </div>`;
+
+  // Schedule
+  html += `<div class="section-card">
+    <div class="section-header" id="sh-s${d.id}" onclick="toggleSection('s${d.id}')">
+      <div class="section-icon si-gold">📋</div>
+      <div class="section-label">行程安排</div>
+      <div class="section-chevron open" id="sc-s${d.id}">▶</div>
+    </div>
+    <div class="section-body open" id="sb-s${d.id}">
+      <ul class="timeline">`;
+  d.schedule.forEach(s => {
+    const cls = s.hl ? '' : s.alt ? 'alt' : s.warn ? 'warn' : 'note';
+    html += `<li class="tl-item"><div class="tl-line"><div class="tl-dot ${cls}"></div></div><div class="tl-content"><div class="tl-text">${s.text}</div></div></li>`;
+  });
+  html += `</ul>`;
+  if (d.swap) {
+    html += `<div class="swap-box" style="margin-top:12px"><div class="swap-title">${d.swap.title}</div><div class="swap-text">${d.swap.text}</div></div>`;
+  }
+  html += `</div></div>`;
+
+  // Attractions
+  if (d.attractions && d.attractions.length) {
+    html += `<div class="section-card">
+      <div class="section-header" id="sh-a${d.id}" onclick="toggleSection('a${d.id}')">
+        <div class="section-icon si-amber">🏛️</div>
+        <div class="section-label">景点介绍 & Fun Facts</div>
+        <div class="section-chevron" id="sc-a${d.id}">▶</div>
+      </div>
+      <div class="section-body" id="sb-a${d.id}">`;
+    d.attractions.forEach((a, ai) => {
+      const aid = `${d.id}_${ai}`;
+      html += `<div class="attraction">
+        <div class="attraction-header" onclick="toggleAttr('${aid}')">
+          <span class="attr-emoji">${a.emoji}</span>
+          <span class="attr-name">${a.name}</span>
+          <span class="attr-chv" id="ac-${aid}">▶</span>
+        </div>
+        <div class="attraction-body" id="ab-${aid}">
+          <div class="attr-history">${a.history}</div>
+          <div class="fun-facts">
+            <div class="fun-facts-title">✦ Fun Facts</div>
+            ${a.facts.map(f=>`<div class="fun-fact">${f}</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Checklist
+  if (d.checklist) {
+    html += `<div class="section-card">
+      <div class="section-header" id="sh-c${d.id}" onclick="toggleSection('c${d.id}')">
+        <div class="section-icon si-green">✅</div>
+        <div class="section-label">当日 Checklist</div>
+        <div class="section-chevron" id="sc-c${d.id}">▶</div>
+      </div>
+      <div class="section-body" id="sb-c${d.id}"><ul class="checklist">`;
+    d.checklist.forEach(cat => {
+      html += `<li class="check-cat">${cat.cat}</li>`;
+      cat.items.forEach(item => {
+        const key = `${d.id}_${item.replace(/\s/g,'_').substring(0,20)}`;
+        const done = !!checkState[key];
+        html += `<li class="check-item${done?' done':''}" id="ci-${key}" onclick="toggleCheck('${key}')">
+          <div class="check-box">${done?'✓':''}</div>
+          <span class="check-label">${item}</span>
+        </li>`;
+      });
+    });
+    html += `</ul></div></div>`;
+  }
+
+  // Tickets
+  if (d.tickets && d.tickets.length) {
+    html += `<div class="section-card">
+      <div class="section-header" id="sh-t${d.id}" onclick="toggleSection('t${d.id}')">
+        <div class="section-icon si-red">🎟️</div>
+        <div class="section-label">购票 / 预约信息</div>
+        <div class="section-chevron" id="sc-t${d.id}">▶</div>
+      </div>
+      <div class="section-body" id="sb-t${d.id}">`;
+    d.tickets.forEach(t => {
+      html += `<div class="ticket-row"><span class="ticket-name">${t.name}</span><span class="ticket-info">${t.info}</span></div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Tips
+  if (d.tips) {
+    html += `<div class="section-card">
+      <div class="section-header" id="sh-tp${d.id}" onclick="toggleSection('tp${d.id}')">
+        <div class="section-icon si-purple">💡</div>
+        <div class="section-label">游玩贴士 & 穿衣指南</div>
+        <div class="section-chevron" id="sc-tp${d.id}">▶</div>
+      </div>
+      <div class="section-body" id="sb-tp${d.id}">
+        <div class="tip-grid">`;
+    d.tips.forEach(tip => {
+      html += `<div class="tip-card">
+        <div class="tip-card-icon">${tip.icon}</div>
+        <div class="tip-card-title">${tip.title}</div>
+        <div class="tip-card-text">${tip.text}</div>
+      </div>`;
+    });
+    html += `</div></div></div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+function switchDay(id) {
+  currentDay = id;
+  renderNav();
+  const d = DAYS[id-1];
+  document.getElementById('mainContent').innerHTML = renderDay(d);
+  renderWeatherCard(d, `wc-${id}`);
+  window.scrollTo({top:0, behavior:'smooth'});
+  document.getElementById('headerWeather').textContent = '🌤 加载中…';
+}
+
+function scrollToWeather() {
+  const el = document.getElementById(`wc-${currentDay}`);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// iOS hint
+if (/iPhone|iPad/i.test(navigator.userAgent) && !window.navigator.standalone) {
+  const hint = document.getElementById('ios-hint');
+  if (hint && !localStorage.getItem('ios-hint-dismissed')) {
+    hint.style.display = 'block';
+  }
+  const btn = hint && hint.querySelector('button');
+  if (btn) btn.addEventListener('click', () => localStorage.setItem('ios-hint-dismissed','1'));
+}
+
+// Init
+renderNav();
+switchDay(1);
+</script>
+</body>
+</html>
